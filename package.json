@@ -9,6 +9,7 @@
     "test": "standard && npm run deps && node test"
   },
   "dependencies": {
+    "clean-css": "^4.1.9",
     "css": "^2.2.1",
     "end-of-stream": "^1.4.0",
     "extract-html-class": "^1.0.1",

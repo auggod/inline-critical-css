@@ -6,6 +6,7 @@ var eos = require('end-of-stream')
 var through = require('through2')
 var hs = require('hyperstream')
 var assert = require('assert')
+var CleanCSS = require('clean-css')
 
 var filter = require('./lib/filter')
 
@@ -35,10 +36,21 @@ function inline (css) {
     }).concat(extractId(src).map(function (id) {
       return '#' + id
     })).concat(extractTag(src))
+
     var critical = filter(css, valid)
+
+    var cleanedCritical = new CleanCSS({
+      level: {
+        2: {
+          all: false, // sets all values to `false`
+          removeDuplicateRules: true // turns on removing duplicate rules
+        }
+      }
+    }).minify(critical).styles
+
     var style = ''
-    if (critical) {
-      style = '<style>' + critical + '</style>'
+    if (cleanedCritical) {
+      style = '<style>' + cleanedCritical + '</style>'
     }
 
     var source = hs({
